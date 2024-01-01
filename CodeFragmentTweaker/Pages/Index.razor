@@ -65,7 +65,7 @@
 
         _body = Regex.Replace(
             _body,
-            @"^\s*public\s+(?<type>[\w<>]+)\s+(?<name>\w+)\s*\{\s*get\s*;\s*set\s*;\s*\}\s*$",
+            @"^\s*public\s+(?<type>[\w<>\._]+)\s+(?<name>[\w_]+)\s*\{\s*get\s*;\s*set\s*;\s*\}\s*$",
             match =>
             {
                 var name = match.Groups["name"].Value;

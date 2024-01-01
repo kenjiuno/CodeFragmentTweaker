@@ -1,0 +1,113 @@
+﻿@page "/"
+@using System.Text.RegularExpressions;
+@inject IJSRuntime _js
+
+<PageTitle>Index</PageTitle>
+
+<button type="button" class="btn btn-primary" accesskey="p" @onclick="PasteAsync"><u>P</u>aste</button>
+<button type="button" class="btn btn-secondary" accesskey="1" @onclick="ConvertToINotifyPropertyChangedAsync">Convert to INotifyPropertyChanged (Alt+1)</button>
+<button type="button" class="btn btn-secondary" accesskey="2" @onclick="ConvertToBaseNotifyPropertyChanged">Convert to BaseNotifyPropertyChanged (Alt+2)</button>
+<button type="button" class="btn btn-primary" accesskey="c" @onclick="CopyAsync"><u>C</u>opy</button>
+<br />
+<br />
+
+<textarea class="form-control" rows="20" value="@_body" @oninput="HandleOnChange" style="font-family: 'Courier New', Courier, monospace"></textarea>
+
+@code {
+    private string _body = "";
+    private Task? _task = null;
+
+    private void HandleOnChange(ChangeEventArgs e)
+    {
+        _body = e.Value + "";
+    }
+
+    private async Task PasteAsync()
+    {
+        _body = await _js.InvokeAsync<string>("navigator.clipboard.readText", new object[0]);
+        StateHasChanged();
+    }
+
+    private async Task CopyAsync()
+    {
+        await _js.InvokeAsync<string>("navigator.clipboard.writeText", new object[] { _body });
+    }
+
+    private async Task ConvertToBaseNotifyPropertyChanged()
+    {
+        ApplyINotifyPropertyChanged(
+            name => $"OnPropertyChanged(nameof({name}));"
+        );
+    }
+
+    private async Task ConvertToINotifyPropertyChangedAsync()
+    {
+        ApplyINotifyPropertyChanged(
+            name => $"PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof({name})));"
+        );
+    }
+
+    private void ApplyINotifyPropertyChanged(Func<string, string> getNotifier)
+    {
+        var template = @"        #region $2$
+        private $3$ $1$ = $4$;
+        public $3$ $2$
+        {
+            get => $1$;
+            set
+            {
+                $1$ = value;
+                $5$
+            }
+        }
+        #endregion
+";
+
+        _body = Regex.Replace(
+            _body,
+            @"^\s*public\s+(?<type>[\w<>]+)\s+(?<name>\w+)\s*\{\s*get\s*;\s*set\s*;\s*\}\s*$",
+            match =>
+            {
+                var name = match.Groups["name"].Value;
+                var type = match.Groups["type"].Value;
+
+                return template
+                    .Replace("$1$", $"_{GetCamelCase(name)}")
+                    .Replace("$2$", $"{name}")
+                    .Replace("$3$", $"{type}")
+                    .Replace("$4$", $"{GetDefaultExpressionOf(type)}")
+                    .Replace("$5$", getNotifier(name))
+                    ;
+            },
+            RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant
+        );
+        StateHasChanged();
+    }
+
+    private string GetDefaultExpressionOf(string type)
+    {
+        if (type == "bool")
+        {
+            return "false";
+        }
+        if (type == "string")
+        {
+            return "\"\"";
+        }
+
+        {
+            var match = Regex.Match(type, @"IEnumerable<(?<type>\w+)>");
+            if (match.Success)
+            {
+                return $"Array.Empty<{match.Groups["type"].Value}>()";
+            }
+        }
+
+        return "null";
+    }
+
+    private string GetCamelCase(string name)
+    {
+        return name.Substring(0, 1).ToLower() + name.Substring(1);
+    }
+}

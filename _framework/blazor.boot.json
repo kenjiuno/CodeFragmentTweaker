@@ -7,7 +7,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "CodeFragmentTweaker.dll": "sha256-55AiXBcR6h\/OPmLS4deZIzfA2SMVT8w\/wbRAqIRhQOA=",
+      "CodeFragmentTweaker.dll": "sha256-wHQFpkglKUEbPw+VG\/tjM2fj2aot1PdXUOWBYYG5nlc=",
       "Microsoft.AspNetCore.Components.dll": "sha256-sC5ICWGBmAXWhO4o6LmjEGJU2Z2O3o20Sp7q2r6+hd8=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-OB2eMslbAanBqw11RCiwRYItn\/5YUjmdR4\/7FHTzTIE=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-woFJZRFO91w+FGpK9H18LA6rfSsLGiSTRqa76uiOmkg=",

@@ -7,6 +7,7 @@
 <button type="button" class="btn btn-primary" accesskey="p" @onclick="PasteAsync"><u>P</u>aste</button>
 <button type="button" class="btn btn-secondary" accesskey="1" @onclick="ConvertToINotifyPropertyChangedAsync">Convert to INotifyPropertyChanged (Alt+1)</button>
 <button type="button" class="btn btn-secondary" accesskey="2" @onclick="ConvertToBaseNotifyPropertyChanged">Convert to BaseNotifyPropertyChanged (Alt+2)</button>
+<button type="button" class="btn btn-secondary" accesskey="3" @onclick="ConvertToBindableBase">Convert to BindableBase (Alt+3)</button>
 <button type="button" class="btn btn-primary" accesskey="c" @onclick="CopyAsync"><u>C</u>opy</button>
 <br />
 <br />
@@ -31,6 +32,38 @@
     private async Task CopyAsync()
     {
         await _js.InvokeAsync<string>("navigator.clipboard.writeText", new object[] { _body });
+    }
+
+    private async Task ConvertToBindableBase()
+    {
+        var template = @"        #region $2$
+        private $3$ $1$ = $4$;
+        public $3$ $2$
+        {
+            get => $1$;
+            set => SetProperty(ref $1$, value);
+        }
+        #endregion
+";
+
+        _body = Regex.Replace(
+            _body,
+            @"^\s*public\s+(?<type>[\w<>\._]+)\s+(?<name>[\w_]+)\s*\{\s*get\s*;\s*set\s*;\s*\}\s*$",
+            match =>
+            {
+                var name = match.Groups["name"].Value;
+                var type = match.Groups["type"].Value;
+
+                return template
+                    .Replace("$1$", $"_{GetCamelCase(name)}")
+                    .Replace("$2$", $"{name}")
+                    .Replace("$3$", $"{type}")
+                    .Replace("$4$", $"{GetDefaultExpressionOf(type)}")
+                    ;
+            },
+            RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant
+        );
+        StateHasChanged();
     }
 
     private async Task ConvertToBaseNotifyPropertyChanged()

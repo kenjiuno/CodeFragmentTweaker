@@ -1,7 +1,7 @@
 {
   "entryAssembly": "CodeFragmentTweaker",
   "resources": {
-    "hash": "sha256-6b5D+AO6qFa506b4rjA8WIqNBK+nSeSRIB5teG6WNfI=",
+    "hash": "sha256-R5QA+pEG4rTmNlpxjQzcIC5ounuJlTAzjKNMJ14WRs0=",
     "runtime": {
       "dotnet.6.0.28.vfwb5jfmzp.js": "sha256-PYXBt6AuhzWXVEEyGsbAwIvVsAbcDs2FnKYIkVYqLqA=",
       "dotnet.timezones.blat": "sha256-hKZ27N25m01CP4HR0RFvVj2dU0Cw2+EqatmI4zCXdHc=",
@@ -11,7 +11,7 @@
       "icudt_no_CJK.dat": "sha256-OxylFgLJlFqixsj+nLxYVsv5iZLvfIKMpLf9hrWaChA="
     },
     "assembly": {
-      "CodeFragmentTweaker.dll": "sha256-JQ1ptendeO4fSXsiPzqy+amY/h8Rc1TUWC6QOpIUOs4=",
+      "CodeFragmentTweaker.dll": "sha256-sVreBGXDdhpFimfSNemEoag7KkY1FvqEG0z4wl8fmAQ=",
       "Microsoft.AspNetCore.Components.dll": "sha256-sC5ICWGBmAXWhO4o6LmjEGJU2Z2O3o20Sp7q2r6+hd8=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-OB2eMslbAanBqw11RCiwRYItn/5YUjmdR4/7FHTzTIE=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-woFJZRFO91w+FGpK9H18LA6rfSsLGiSTRqa76uiOmkg=",
